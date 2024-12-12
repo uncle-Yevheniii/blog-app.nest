@@ -4,6 +4,7 @@ import { AccessUserDto, CreateUserDto } from './dto';
 import { hash, verify } from 'argon2';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
+import { Users } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -12,12 +13,19 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string): Promise<Users> {
     return this.prismaService.users.findUnique({ where: { email } });
   }
 
-  async findUserByIdAndUpdateRt(id: number, rt: string) {
-    return this.prismaService.users.update({ where: { id }, data: { hashRt: rt } });
+  async findUserById(id: number): Promise<Users> {
+    return this.prismaService.users.findUnique({ where: { id } });
+  }
+
+  async findUserByIdAndUpdateRt(id: number, rt: string | null = null): Promise<Users> {
+    return this.prismaService.users.update({
+      where: { id, hashRt: rt === null ? { not: null } : undefined },
+      data: { hashRt: rt },
+    });
   }
 
   async hashData(data: string): Promise<string> {
@@ -60,7 +68,6 @@ export class AuthService {
   }
 
   async signinLocalUser(dto: AccessUserDto): Promise<Tokens> {
-    console.log(dto);
     const user = await this.findUserByEmail(dto.email);
     if (!user) throw new BadRequestException('Credentials are invalid');
 
@@ -72,6 +79,19 @@ export class AuthService {
 
     return tokens;
   }
-  async logout() {}
-  async refresh() {}
+  async logout(userID: number): Promise<void> {
+    await this.findUserByIdAndUpdateRt(userID);
+  }
+  async refresh(userID: number, rt: string): Promise<Tokens> {
+    const user = await this.findUserById(userID);
+    if (!user) throw new BadRequestException('Access denied');
+
+    const isMatch = await this.matchData(user.hashRt, rt);
+    if (!isMatch) throw new BadRequestException('Access denied');
+
+    const tokens = await this.signToken(user.id, user.email);
+    await this.updateRtHash(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
 }
