@@ -7,12 +7,12 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Blog-app API')
-    .setDescription('The Blog-app API using NestJS')
+    .setDescription('API Documentation for Blog-app project using NestJS')
     .setVersion('1.0')
     .build();
 
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
