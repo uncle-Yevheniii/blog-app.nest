@@ -1,12 +1,11 @@
 import { PrismaService } from './prisma/prisma.service';
-import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
-import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
+import { PingModule } from './ping/ping.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [AppController],
-  providers: [AppService, PrismaService],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PingModule],
+  controllers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}
