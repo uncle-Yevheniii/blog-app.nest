@@ -1,10 +1,10 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AccessUserDto, CreateUserDto } from './dto';
-import { hash, verify } from 'argon2';
-import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { Users } from '@prisma/client';
+import { hash, verify } from 'argon2';
+import { Tokens } from './types';
 
 @Injectable()
 export class AuthService {

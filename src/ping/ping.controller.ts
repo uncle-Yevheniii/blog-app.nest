@@ -1,6 +1,6 @@
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Controller, Get } from '@nestjs/common';
 import { PingService } from './ping.service';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('ping')
 export class PingController {
