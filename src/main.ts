@@ -6,10 +6,17 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Accept',
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Blog-app API')
     .setDescription('API Documentation for Blog-app project using NestJS')
     .setVersion('1.0')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'jwt' }, 'at')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

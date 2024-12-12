@@ -43,4 +43,9 @@ export class UtilsService {
 
     return { accessToken: at, refreshToken: rt };
   }
+
+  async updateRtHash(userID: number, rt: string): Promise<void> {
+    const hashRt = await this.hashData(rt);
+    await this.findUserByIdAndUpdateRt(userID, hashRt);
+  }
 }
