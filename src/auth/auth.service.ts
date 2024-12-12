@@ -1,9 +1,9 @@
 import {
   BadRequestException,
-  ConflictException,
   ForbiddenException,
-  Injectable,
   NotFoundException,
+  ConflictException,
+  Injectable,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AccessUserDto, CreateUserDto } from './dto';
