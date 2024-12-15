@@ -1,4 +1,5 @@
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Users } from '@prisma/client';
@@ -9,6 +10,7 @@ import { Tokens } from '../types';
 export class UtilsService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -37,8 +39,20 @@ export class UtilsService {
 
   async signToken(userID: number, email: string): Promise<Tokens> {
     const [at, rt] = await Promise.all([
-      this.jwtService.signAsync({ sub: userID, email }, { expiresIn: '15m', secret: 'at-secret' }),
-      this.jwtService.signAsync({ sub: userID, email }, { expiresIn: '7d', secret: 'rt-secret' }),
+      this.jwtService.signAsync(
+        { sub: userID, email },
+        {
+          expiresIn: this.configService.get<string>('AT_EXPIRES_IN') || 1,
+          secret: this.configService.get<string>('AT_SECRET') || 'secret',
+        },
+      ),
+      this.jwtService.signAsync(
+        { sub: userID, email },
+        {
+          expiresIn: this.configService.get<string>('RT_EXPIRES_IN') || 1,
+          secret: this.configService.get<string>('RT_SECRET') || 'secret',
+        },
+      ),
     ]);
 
     return { accessToken: at, refreshToken: rt };

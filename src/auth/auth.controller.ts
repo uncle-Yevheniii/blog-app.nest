@@ -26,7 +26,7 @@ export class AuthController {
   }
 
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
     description: 'User accessed',
     schema: { type: 'object', $ref: getSchemaPath(TokenResDto) },
   })
