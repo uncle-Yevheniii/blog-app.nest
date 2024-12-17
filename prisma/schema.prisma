@@ -12,7 +12,7 @@ model Users {
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
   email     String   @unique
-  name      String
+  name      String   @unique
   hashPwd   String
   hashRt    String?
   posts     Posts[]
