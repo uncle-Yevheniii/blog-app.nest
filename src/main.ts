@@ -17,7 +17,7 @@ async function bootstrap() {
     .setTitle('Blog-app API')
     .setDescription('API Documentation for Blog-app project using NestJS')
     .setVersion('1.0')
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'jwt' }, 'at')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'jwt' }, 'JWT-Token')
     .build();
 
   const document = SwaggerModule.createDocument(app, config, { extraModels: [TokenResDto] });

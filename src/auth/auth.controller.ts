@@ -40,7 +40,7 @@ export class AuthController {
     return this.authService.signinLocalUser(dto);
   }
 
-  @ApiBearerAuth('at')
+  @ApiBearerAuth('JWT-Token')
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'User logged out' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
@@ -53,7 +53,7 @@ export class AuthController {
     return await this.authService.logout(user['sub']);
   }
 
-  @ApiBearerAuth('at')
+  @ApiBearerAuth('JWT-Token')
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Token refreshed',
