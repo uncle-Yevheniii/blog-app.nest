@@ -5,9 +5,10 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
+import { UtilsService } from 'src/users/utils/utils.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AccessUserDto, CreateUserDto } from './dto';
-import { UtilsService } from './utils/utils.service';
+
 import { Tokens } from './types';
 
 @Injectable()
@@ -18,8 +19,10 @@ export class AuthService {
   ) {}
 
   async signupLocalUser(dto: CreateUserDto): Promise<Tokens> {
-    const userExists = await this.utilsService.findUserByEmail(dto.email);
-    if (userExists) throw new ConflictException('Credential already exists');
+    const userExistsByEmail = await this.utilsService.findUserByEmail(dto.email);
+    const userExistsByName = await this.utilsService.findUserByName(dto.name);
+    if (userExistsByEmail || userExistsByName)
+      throw new ConflictException('Credential already exists');
 
     const { password, ...userInfo } = dto;
     const hashPwd = await this.utilsService.hashData(password);
