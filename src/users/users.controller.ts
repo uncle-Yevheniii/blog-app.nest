@@ -45,6 +45,7 @@ export class UsersController {
   })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Internal server error' })
+  @ApiOperation({ summary: 'Get me' })
   @UseGuards(AuthGuard('jwt-access'))
   @Get('get-me')
   @HttpCode(HttpStatus.OK)
