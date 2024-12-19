@@ -3,6 +3,8 @@ import { AuthModule } from './auth/auth.module';
 import { PingModule } from './ping/ping.module';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { PostsModule } from './posts/posts.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -11,6 +13,8 @@ import { Module } from '@nestjs/common';
     PingModule,
     AuthModule,
     PrismaModule,
+    PostsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

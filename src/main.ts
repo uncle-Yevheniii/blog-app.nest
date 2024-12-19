@@ -1,3 +1,4 @@
+import { UserResDto, UserResDtoUnauthorized } from './users/dto';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -20,7 +21,9 @@ async function bootstrap() {
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'jwt' }, 'JWT-Token')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config, { extraModels: [TokenResDto] });
+  const document = SwaggerModule.createDocument(app, config, {
+    extraModels: [TokenResDto, UserResDto, UserResDtoUnauthorized],
+  });
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
