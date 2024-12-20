@@ -15,6 +15,7 @@ model Users {
   name      String   @unique
   hashPwd   String
   hashRt    String?
+  likes     Likes[]
   posts     Posts[]
 }
 
@@ -22,8 +23,19 @@ model Posts {
   id        Int      @id @default(autoincrement())
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
-  title     String
-  image     String?
   userId    Int
+  titlePost String
+  likes     Likes[]
   user      Users    @relation(fields: [userId], references: [id])
+}
+
+model Likes {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId    Int
+  postId    Int
+  post      Posts    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
 }

@@ -1,0 +1,77 @@
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
+import { Posts, Likes } from '@prisma/client';
+
+@Injectable()
+export class UtilsService {
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(titlePost: string, userId: number): Promise<Posts> {
+    return this.prismaService.posts.create({
+      data: { userId, titlePost },
+    });
+  }
+
+  async findPostById(id: number): Promise<Posts & { likes: Likes[] }> {
+    return await this.prismaService.posts.findUnique({
+      where: { id },
+      include: { likes: true },
+    });
+  }
+
+  async findLikedPostByUserId(userId: number, postId: number) {
+    return await this.prismaService.likes.findUnique({
+      where: {
+        userId_postId: { userId, postId },
+      },
+    });
+  }
+
+  async likePost(postId: number, userId: number): Promise<void> {
+    await this.prismaService.likes.create({
+      data: { postId, userId },
+    });
+  }
+
+  async unlikePost(postId: number, userId: number): Promise<void> {
+    await this.prismaService.likes.deleteMany({
+      where: { postId, userId },
+    });
+  }
+
+  async getPosts(page: number, limit: number) {
+    const totalPosts = await this.prismaService.posts.count();
+    const lastPage = Math.ceil(totalPosts / limit);
+
+    const posts = await this.prismaService.posts.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      include: { likes: true },
+    });
+
+    const transformedPosts = posts.map(post => ({
+      ...post,
+      likeCount: post.likes.length,
+    }));
+
+    return {
+      totalPosts,
+      currentPage: page,
+      lastPage,
+      posts: transformedPosts,
+    };
+  }
+
+  async updatePost(postId: number, titlePost: string): Promise<Posts> {
+    return await this.prismaService.posts.update({
+      where: { id: postId },
+      data: { titlePost },
+    });
+  }
+
+  async deletePost(postId: number) {
+    await this.prismaService.posts.delete({
+      where: { id: postId },
+    });
+  }
+}
