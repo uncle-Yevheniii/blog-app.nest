@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { BodyPostDto, LikeCountResDto, QueryPostDto } from './dto';
 import { UtilsService } from './utils/utils.service';
+import { GetPostsRes, LikeCountRes } from './types';
+import { BodyPostDto, QueryPostDto } from './dto';
 import { Posts } from '@prisma/client';
 
 @Injectable()
@@ -11,7 +12,7 @@ export class PostsService {
     return await this.utilsService.create(dto.titlePost, userId);
   }
 
-  async addLikeToPost(postId: number, userId: number): Promise<LikeCountResDto> {
+  async addLikeToPost(postId: number, userId: number): Promise<LikeCountRes> {
     const post = await this.utilsService.findPostById(postId);
     if (!post) throw new NotFoundException('Post not found');
 
@@ -24,7 +25,7 @@ export class PostsService {
     return { likeCount };
   }
 
-  async removeLikeToPost(postId: number, userId: number): Promise<LikeCountResDto> {
+  async removeLikeToPost(postId: number, userId: number): Promise<LikeCountRes> {
     const post = await this.utilsService.findPostById(postId);
     if (!post) throw new NotFoundException('Post not found');
 
@@ -37,7 +38,7 @@ export class PostsService {
     return { likeCount };
   }
 
-  async getPostById(postId: number): Promise<Posts & LikeCountResDto> {
+  async getPostById(postId: number): Promise<Posts & LikeCountRes> {
     const post = await this.utilsService.findPostById(postId);
     if (!post) throw new NotFoundException('Post not found');
 
@@ -46,7 +47,7 @@ export class PostsService {
     return { ...post, likeCount };
   }
 
-  async getPosts(dto: QueryPostDto) {
+  async getPosts(dto: QueryPostDto): Promise<GetPostsRes> {
     if (!dto.page) dto.page = 1;
     if (!dto.limit) dto.limit = 2;
 
@@ -61,7 +62,7 @@ export class PostsService {
     return await this.utilsService.updatePost(postId, body.titlePost);
   }
 
-  async deletePost(postId: number, userId: number) {
+  async deletePost(postId: number, userId: number): Promise<void> {
     const post = await this.utilsService.findPostById(postId);
     if (!post) throw new NotFoundException('Post not found');
     if (post.userId !== userId) throw new ConflictException('You are not the owner of the post');

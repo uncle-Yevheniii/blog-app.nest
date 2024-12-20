@@ -48,7 +48,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-access'))
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async logout(@Req() req: Request) {
+  async logout(@Req() req: Request): Promise<void> {
     const user = req.user;
     return await this.authService.logout(user['sub']);
   }
@@ -66,7 +66,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request) {
+  async refresh(@Req() req: Request): Promise<Tokens> {
     const user = req.user;
     return await this.authService.refresh(user['sub'], user['refreshToken']);
   }

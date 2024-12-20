@@ -10,7 +10,7 @@ export class PingController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiOperation({ summary: 'Health server check' })
   @Get()
-  getPingPong() {
+  getPingPong(): { ping: string } {
     return this.pingService.getPingPong();
   }
 }

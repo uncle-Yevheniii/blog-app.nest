@@ -1,6 +1,7 @@
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { FindPostByIdRes, GetPostsRes } from '../types';
 import { Posts, Likes } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UtilsService {
@@ -12,14 +13,14 @@ export class UtilsService {
     });
   }
 
-  async findPostById(id: number): Promise<Posts & { likes: Likes[] }> {
+  async findPostById(id: number): Promise<FindPostByIdRes> {
     return await this.prismaService.posts.findUnique({
       where: { id },
       include: { likes: true },
     });
   }
 
-  async findLikedPostByUserId(userId: number, postId: number) {
+  async findLikedPostByUserId(userId: number, postId: number): Promise<Likes> {
     return await this.prismaService.likes.findUnique({
       where: {
         userId_postId: { userId, postId },
@@ -39,7 +40,7 @@ export class UtilsService {
     });
   }
 
-  async getPosts(page: number, limit: number) {
+  async getPosts(page: number, limit: number): Promise<GetPostsRes> {
     const totalPosts = await this.prismaService.posts.count();
     const lastPage = Math.ceil(totalPosts / limit);
 
@@ -69,7 +70,7 @@ export class UtilsService {
     });
   }
 
-  async deletePost(postId: number) {
+  async deletePost(postId: number): Promise<void> {
     await this.prismaService.posts.delete({
       where: { id: postId },
     });

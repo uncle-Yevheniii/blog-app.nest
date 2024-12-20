@@ -8,7 +8,6 @@ import {
 import { UtilsService } from 'src/users/utils/utils.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AccessUserDto, CreateUserDto } from './dto';
-
 import { Tokens } from './types';
 
 @Injectable()
