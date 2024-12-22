@@ -4,7 +4,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TokenResDto } from './auth/dto';
-import { BodyPostDto } from './posts/dto';
+import {
+  BodyPostDto,
+  CreatePostResDto,
+  GetPostResDto,
+  GetPostsResDto,
+  LikeResDto,
+} from './posts/dto';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,7 +29,16 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {
-    extraModels: [TokenResDto, UserResDto, UserResDtoUnauthorized, BodyPostDto],
+    extraModels: [
+      TokenResDto,
+      UserResDto,
+      UserResDtoUnauthorized,
+      BodyPostDto,
+      CreatePostResDto,
+      GetPostsResDto,
+      LikeResDto,
+      GetPostResDto,
+    ],
   });
   SwaggerModule.setup('api', app, document);
 
