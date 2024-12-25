@@ -6,10 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "copy-package": "cp package.json dist/package.json",
-    "copy-prisma-schema": "cp ./prisma/schema.prisma dist/schema.prisma",
-    "copy-env": "cp .env dist/.env",
-    "build:full": "npm run build && npm run copy-package && npm run copy-prisma-schema && npm run copy-env",
     "build": "nest build",
     "format:prettier": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:prisma": "prisma format",
