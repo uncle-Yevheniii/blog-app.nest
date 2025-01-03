@@ -49,7 +49,7 @@ export class PostsService {
 
   async getPosts(dto: QueryPostDto): Promise<GetPostsRes> {
     if (!dto.page) dto.page = 1;
-    if (!dto.limit) dto.limit = 2;
+    if (!dto.limit) dto.limit = 10;
 
     return await this.utilsService.getPosts(dto.page, dto.limit);
   }
