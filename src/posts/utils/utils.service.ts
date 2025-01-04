@@ -47,11 +47,19 @@ export class UtilsService {
     const posts = await this.prismaService.posts.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      include: { likes: true },
+      include: { likes: true, user: true },
     });
 
     const transformedPosts = posts.map(post => ({
-      ...post,
+      id: post.id,
+      updatedAt: post.updatedAt,
+      createdAt: post.createdAt,
+      titlePost: post.titlePost,
+      user: {
+        id: post.user.id,
+        name: post.user.name,
+      },
+      likes: post.likes,
       likeCount: post.likes.length,
     }));
 
